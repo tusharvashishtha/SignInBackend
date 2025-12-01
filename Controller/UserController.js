@@ -3,10 +3,8 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 async function signUpUser(req, res) {
-    const {name, email, password} = req.body;
-    const pass = await bcrypt.hash(req.body.password, saltRounds);
-    console.log(pass);
-    res.json({pass})
+    const {name, email} = req.body;
+    const password = await bcrypt.hash(req.body.password, saltRounds)
     try{
         await User.create({
             name , email , password
