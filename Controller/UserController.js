@@ -17,7 +17,21 @@ async function signUpUser(req, res) {
 }
 
 async function loginUser(req, res) {
-    
+    const {email, password} = req.body;
+    const searchUser =  await User.findOne({email})
+    try{
+        const check = await bcrypt.compare(password, searchUser.password)
+        if(check){
+            return res.json({status : "success" ,message : "Login Succesfull"})
+        }
+        else{
+            return res.json({status : "Failed", message : "Wrong email and password"})
+        }
+
+    }catch(err){
+        console.log(err)
+        return res.json({stauts : "Failed", message : "Could not login try again later"})
+    }
 }
 
 module.exports = {signUpUser,loginUser}
