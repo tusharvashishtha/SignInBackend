@@ -1,19 +1,28 @@
 const User = require('../Model/User');
 const bcrypt = require('bcrypt');
+const { search } = require('../Routes/Root');
 const saltRounds = 10;
 
 async function signUpUser(req, res) {
-    const {name, email} = req.body;
+    const {name, email, lastname} = req.body;
     const password = await bcrypt.hash(req.body.password, saltRounds)
     try{
         await User.create({
-            name , email , password
+            name , email , password , lastname
         })
         res.status(201).json({status : 'Success' , message : "User created successfully"})
     } catch(err){
         console.log(err)
         res.status(400).json({status : 'Failed', message : "Error please try again later"})
     }
+}
+
+async function getUserDetails(req, res){
+    const {email} = req.body;
+    const searchUser = await User.findOne({email})
+    console.log(searchUser.fullname);
+    console.log(searchUser.greet())
+    res.json({searchUser})
 }
 
 async function loginUser(req, res) {
@@ -34,4 +43,4 @@ async function loginUser(req, res) {
     }
 }
 
-module.exports = {signUpUser,loginUser}
+module.exports = {signUpUser,loginUser, getUserDetails}
